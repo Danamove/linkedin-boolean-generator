@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Search Filter Generator | AddedValue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-alt: #f8f7fc;
+    --border: #e8e5f0;
+    --text: #0D0620;
+    --text-secondary: #5a5470;
+    --accent: #6C5CE7;
+    --accent-hover: #5a4bd6;
+    --accent-light: #f0eeff;
+    --accent-muted: #A29BFE;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --tag-bg: #f8f7fc;
+    --tag-border: #e0dcf0;
+    --radius: 8px;
+    --dark: #0D0620;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    background: var(--dark);
+    padding: 18px 0;
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo img {
+    height: 30px;
+    width: auto;
+  }
+  .header-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent-muted);
+    background: rgba(108, 92, 231, 0.15);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #1A0E3E 100%);
+    padding: 48px 0 40px;
+    text-align: center;
+  }
+  .hero-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--accent-muted);
+    font-weight: 300;
+  }
+
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Platform Tabs */
+  .platform-tabs {
+    display: flex;
+    gap: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .platform-tab {
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: none;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .platform-tab:last-child { border-right: none; }
+  .platform-tab:hover { background: var(--surface-alt); }
+  .platform-tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .platform-tab small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: 3px;
+    opacity: 0.65;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  /* Form */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group.full-width { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+  }
+  .form-group .hint {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  /* Multi-select chips */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    color: var(--text-secondary);
+  }
+  .chip:hover { border-color: var(--accent-muted); }
+  .chip.selected {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Generate Button */
+  .generate-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-bottom: 28px;
+    letter-spacing: 0.3px;
+  }
+  .generate-btn:hover { opacity: 0.92; }
+  .generate-btn:active { transform: scale(0.995); }
+
+  /* Results */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  .result-section { margin-bottom: 14px; }
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .result-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .copy-btn {
+    padding: 4px 12px;
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    border-radius: var(--radius);
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .copy-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .copy-btn.copied {
+    background: var(--success-light);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .result-value {
+    padding: 14px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    line-height: 1.7;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+  .result-value.highlight {
+    background: #faf5ff;
+    border-color: var(--accent-muted);
+  }
+  .result-value .no-filter {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  /* Copy All */
+  .copy-all-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--surface);
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 28px;
+  }
+  .copy-all-btn:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Tips */
+  .tips-box {
+    background: var(--accent-light);
+    border: 1px solid var(--tag-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 16px;
+  }
+  .tips-box h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--accent);
+  }
+  .tips-box ul { list-style: none; padding: 0; }
+  .tips-box li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 4px 0 4px 20px;
+    position: relative;
+    font-weight: 300;
+  }
+  .tips-box li::before {
+    content: "\2192";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* Platform badge */
+  .platform-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    letter-spacing: 0.3px;
+  }
+  .badge-sales { background: #dbeafe; color: #1d4ed8; }
+  .badge-lite { background: #fef3c7; color: #92400e; }
+  .badge-corporate { background: #d1fae5; color: #065f46; }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--dark) 0%, #1A0E3E 100%);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    margin-top: 48px;
+    text-align: center;
+  }
+  .cta-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+  }
+  .cta-section p {
+    font-size: 14px;
+    color: var(--accent-muted);
+    max-width: 520px;
+    margin: 0 auto 24px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+    border: none;
+    border-radius: 50px;
+    color: #FFFFFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    text-decoration: none;
+  }
+  .cta-btn:hover { opacity: 0.9; }
+  .cta-btn:active { transform: scale(0.98); }
+  .cta-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 28px;
+  }
+  .cta-stat {
+    text-align: center;
+  }
+  .cta-stat-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+  .cta-stat-label {
+    font-size: 11px;
+    color: var(--accent-muted);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 22px; }
+    .platform-tab { padding: 10px 8px; font-size: 12px; }
+    .cta-stats { flex-direction: column; gap: 16px; }
+    .header-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPwAAAA9CAIAAAAGfZMhAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAYZ0lEQVR4Ae0dCVxM67dlKu2lUBLxSCEP2ZIUkTXykC2EPIks9ZBkT3rZE9m3yNLLK0sKSbYskYjk2RWhv2hTMzX9z723uX1z721myjRNzP3Nb+Z85zvbd75zz7eG/IhugY00u5VzVJP+2ywnyUeeQRkTjoEMQVWfA2GWgVLvgfLasJClpfZbQUHhw7ehcnKSDSCyOaKqFZWuNtwkk1lHHqB3Ohk3NbeIVVas8vDtYUlHPGkw0igEJKtRgLG1wphQATJY2j1AdjHZrSRGnKYrlpVxcHmkGnFKF0kWohkBRWKtY8tFt1FGKU0eUJAmY2pmCySDWskHNbNGxlVTD0iuE6Ug6CXX2Jp2h4yvdj0g6bQlBUGPOPQH4v8HWBEDZOCv4AHpCHpZxP4KscbQRknneMIEFoMldYoi479Gi9o6NV2mvJ54QDoyPTiLeOfJkJctTutJANVHM8mgR8JNatpRTZuI90ZqrJcZIq0ekLrpDd/2ozylJK1elNlVrzxAZnqptJo/d/OXqjK4msNDVWJk+J/XA2jQS2u48NslQujzM/y8nSdrWc08gAZ9zSTIuGQeqGceoAR9vcmRwgwVYTyoZz0lM1dsHpC+hazYmiYTJM0eEJa1atN2SqavTVXill2XbhN3W2TyJOmBehL0stmKJIOi1nXVcb6q3emN82SHca4O8nLy5XLlcdE3d2099UP+BF/xX06gISjihdVTyGVFSXigjiMemijfzmA0f0v5w4q/rlolRUWFB2/DFRQqBpPy8vIuJi5sNvE3K9WShBDTrKMhEGIMFFZPIZcVa9cDdR/x0D769EZsZilC1PMiHjTJy8uzlBR/1KVgHfnBZZElEuBXAWiRnmbNGxu3aAImi0SNE7FUlAyN9Bob6IrOUgNKyWipyjDwiUHThlXV1lN8NfpYcAvn+46PvBRkY99ZMBlZ+3tX04i4v/03e5CYagPlcioqypqaavABgGSnhTkNQZLyAKPWhrG3tp1PCjZuqcfDCf+d6j3m4t0dYdGewkl/gALVoqyipKmlCh8R5ak0qB49RWxQ1ErwyYmYJRR8TYvCO6KmkqvHJ56gX7LG1W2Ok1l7k617va37dgITOnUzXf63G8UW/02z7AZYAtKiS+uQg4vadWzpNNZ2024vdECgsAguhh73u5VxED6JqSEwrJDE4F3iw8MIcXc5rx6GIx6L8N9yLheIlJSEU/4IBaqlS+8OSU8Pwsd+UDtRZG474gvEZxKDRCGm05TiKFYtN5Cut7YxlYFSY00Tpg2aOH0wES4qDZR3h/seO7v2SPSakeP6UmTaDrDUb6Jr3MJg7/FlDfW0oBa4HIb1mOcznkIpSlG7sY5lDzOCUl1D08hYcJLmfwtEUSB9NEmXH+TkfQe7tu6fKzRTqGupduuFvRv3bqdKR1OqkVBq1WAxBH3vvp0oCbKjZRsKBtoAS9gAvwO3r6XF3grW0KwcoIHSzqFLDRq5bOd82HvicEpLy7gKCorLAhneHF4GJ8UToU9Dk/V81zorsVICyZeXb/UPw43RbdveULBVPqHzIUeXl5etWnxMMOWvViuGoJ87df2r5++FOs5vQei92+nRVzZSKPO+FU50XEZBilLs3t4EyKKOJwRviQSgl621fiOtymUuL7yJX5rAKtA0OgEIAa+OAK4frEpKfEhIGDKih2BRVuYtgOBa/H3wsGBKCdZKRbIXwz49ZNqpo1ftCvdt2w7zMuOzdP6OZ0/e7Du5HJZWKMH7rBzXkSsL8otQpChw3zF99LTUgPJsZMKXPI6X9xiYK/Xo3eHcqZuM7GSAdu3ZznGMra6OBpdbfjMxNerEFRgrBOd3VTWV0RP6dbFqDxnia27+kb0x/z19h2khhTKpNDVvDscUjRrrQGV62qt/jl7O+ZTLRFiBU1NXcRpj183GokLLvpj/0nEt/DzZ7z7fffK2W7vmUz1G7Nh05nsR8xZw8zZGTfBtpSuXqA6B1bDjaBvrfl1gKy0/vzDy6OWUuxmgREtHw7yDSfF3duq9Z/w6K0u/W5pCD+Z8/vbyWWYlFoF62lhwudwPmTnv3nxE0BiopMTqP6T7gOG9QG9BQVHihXuXzt8BYgqZBIos6Dja28eEE2jL54+5aakvGIO+rIwbuOzgo5TnoUeWUDa/3rzK9pgUmPXuk0DZDJWKLMVV/tOh4uV/Gcm3n8MEKTOvqJmW2oq/XWKjb4FGPh5eaLp4Os10d2zYUJOsHTC0+4og101rj8aef0AiUUBZWWn1lllDnaxRF42a0O/hvafrlu/nV1PJN2hsX895Ti1MDEiU/eBucxY637n5eO3SAy8yqKFclZb0R89X++yma1ntGRwdv0FBroHDMMvok7dILSQALQ49uQxs/l707VT4bRIPYbck0G30+L7o+O7kbPc+88Oqxbsa/maybrVrft4bK7NFJAsFWLFjrqlxo6RryTPGrqdUEcXNe7w0tdRCN/2zfUMESQAbwQv9p02YMgDVO2KMbUkx50Bo9I6N/0g49MWQ6aFtsIk2cFhPspEkAPP4bUEnI45cOhEbaGTciMQDkPXus4fLutcvP6BIEeFmrQx18W273VtjgAWOveaP84+ICVDX0O8/pGPcGWoEw1sxfc6IBb4TCPlP015nv88BuLVZc9ie91rq2t7iBl21tq7mpbs7VNWwzdD8vO+P7j8rKWGrNFDp0t2so6XZlr2Lk2+l07mGj7EN2OxO4CFVZ2V+Au3mHVrCdn73Xu3Dz6xxG7v8UcpbkhHVUlhQnJqcQWoxt2jNqCXzRXZB/nctTdWR4+wYg97ASL9FE+z0YG/IGRiHCV3wasGecsvWTaEI0QZTzZLiEkB2tGzbtJnhhtDF0ScToKqUU0FPcFG+if2cci4vkVCqmYqgIvysv1kHE6iEQfVuUjq7hK2uoQoLPxg03BeM7tG7rfvE9dB2Ju5awf1Q0EN7iGFi4vShGprYZAN94PXdExy1f3s0kI3qv9DDe8zM+X8Qpz+QjP8cvxbmNjDUVrKUY4vdymLV0OLgOXjO4F6OSyGonqe9zv2SD1l8oKMNPej7DO1BRDx0trvL2rs3n5CyvfynTZ7iMHC4dQWG15sQqacf7yWW2xDuExyXw6tF0IDNZ29ta2qoN3Rkb1IOARj91tR/qwfAoMhjcuDt62kkwZylE93ch0FnHzu33soMEiq2CcOnJeXZhGF8WqJvBhszaeGwOUciEj2mDeras7N+Y52cT19JLQRg2duCABIv3SOrIlN3tdRWh+Kr55nDbf8imwPp/8TVTaYtmri4DSGJxQgcur7ZrBnku/K01JfjBvvikjFPwoAQfTe0saZq524Wru5Dtm/4sSsq1bEYHXBQPl7nozh+uId1+4QHu64+3A2fmfNH8ldipbOR18P3x8LK9UrqrrPXt5w6dtnXM4QgA48fjwm4+nAP+klM3TV6gj1dDgVjaGJg+3srQIbtiSbTA6SQc1ewjbmBjr30G2tTWFbzjsAcbeffQSIeyDb57V+6eA+FHoo9+3UidkD3bz81yWklGSJQxS7hDLOaeyuZYeJ78Kw/4VBHm7loxANXyNqjvjxF4137ERp72ncmtBzYcWrSCKqWEdZzb1Uxvd65/FARnsLn/DWCEEV+yysorA5yg+L/Pj17mlaxwdAEcj++YxYTdXVUfx+0OeA6Z5sFsfEV6YOUIxZAXUvN3BBrYtTJhAlD/XCZFaGVn1fk0GF6+ocvgJzl5WzSuolYNIoiBOsj4QHOJKm7dQcdXQ1NLXX4YCmf9mzfcHL1RvfWbY21dTRMWhmGn137LOPdIo9gIGSxFOFFp3xgIWXVpyNNDBXRd3A3AvXv8US0bqNXaDE2m1f0XDgKxfcZ1lNfowFgZk9amfX2M1pFwOfC42MvJFPwk+Y4EZjdwdHkDIGkYRezA5fsI4sEYGZpaoin0mVeW95nYX1Jec6FX45PwKZec33GQX4FYNKcipCtQguHroWQCaPowwcvAO4/hLrb+7uVeQNcuJf7IYIYvuetm07s629cE0YfTqGBa712ksRiBHx3e7Gwmx0lm/2PcLkwceKLtVJO6UTbBSXY8K4wYLCQzSgxWkUkJn5bRBOvoIiu7qg8JcXsD1k5tgMquwQmtaFhS56lv1k6bwe2YcL0yCsIkgkcSipKc3zGAZCf9/FZOt96gFPCSXv4EqrsB3dFZVtYtIRi3te8m1cZcjNB+W/EVZRFSVnJCj/22r5hb0E+81zz+ePXT7JzUa7mxvpE8f6dF/BW0z9KLMWD26JwGmVzCyOWEsuqO3a4Blry86rQkkbVQmoMDsR233UaGtjYm5NIAIY72xLFp2lvCQDCfVB/rCMiwqI+fsgjkJTv3M9f72UyZAQKWbWKMHkb1AebaF2Ovfc19zvdIYDhFrPZxdictrd9u2oJ/xFiFhbvQiKNWb7gvSZIHnDhDFqFMsPuzb6IFaMHLNqx4Z9Z3qMYxgfevBnlQuEBf9ho46PKioWHDbGZIt8Te/ZW186tdfX0x07ufeLwdaJOFacvLOSw2RVvGr3Fr9Ir4oNgUVJSJEauC+cqJ+V8mvBC3Ikr7eZVzuvUGmBLXnjOXd9GAAK+mxhoPHuqwNPyWADlhZNX2s2t1EJSPrz55FV2bksD3T/nOl2Lr1hSN9DWGDUGC/rYaJj7sQliWEcRlt26hg0OVT0nQ6ItA7F5kbgeBUUFFVxWv0G9Ut/1Eiy2dZuKlCGYTCy12CBbs+dBckbx9xJi0IQ9RBHvJ+rpayWk7LRuP72MWzbnL2dUNQR8SjK2YSzgcRxlQ9Ru2rVQANmkGaPIoC8swRIJl4stHMmHHvdkFQAwa4d4UZYr//L5G4oXDBcWlQgmQGuhsZySUp4W6koUpRQAx0XdcHcfZtG5LUnj7DYI0gyXy/5rVjiJhAQElkH8ffvGnOZJSvECsF0B4xc2sxThgWMTEajEQ1IZ9ILjgK7tWnyKXac/4fwfqqZ5DHfzrJgE0ynpmHPXt/5hvzDiSDx6v4tbVp6fV0gnJjFNTQx6W7cniwKAFq0MVNVY34uw1K6hiqU5RUU1GG3RBRzhY2KQ09Dm23pSViUubcrrN9bL/VJUlaKmLRqjVeq8uxVjHHzyvhWgVXT486dcEbUYNufTgoo6HBINQc9iqf61bPCGNeehapCjFXy/yHiPkrGUWUTG1dHVRfEUuIVpMwrmB4swzhMRHxF2cc+2aLSv6ZI5WJ6R0FMZ9DVQSOy7AeOB0DNw5wxOLkUUAivgvSf8Zk5Y9z7zk4gsQOa5dCIsQUpLi11GrP5eyJxW1bXVDkevYSkoHjvr49TPH7g+4ce9DfXU1dSVCwtKKpcvyKSuLX5iT1pSmF8EuVdHTi5g6/gxA4NIPAooKrEcHLqhmOxPFcOCgkIpnEKgVYxweUlpDbSgovK+5J2NuTNsSPfRLn9sDbxg2KaZBR64IeuPoGSw2oFTCZg9zP5rYOzpJLSKhGHPZ7SzHVmsCviQ/aWdcSNjE+aXB0Z7YuQn2GGdmlXENlJTtu7XctVicIjkcnlV9hN4iCIxPHA4fzGm8uQPJEJaFSy3VRujHWGLmzarMo1R2Mvl5XvbdABk8q3Hj+4/f57xjvGTeifj1MlEIGtj3rGxoTYAV2PuwLeyisryoCkAUB7oByUV5dmLscUx+YDpEXtjoGhuYdmqDbOF/R176uLnViRXBr6MhuI8Xz5pJAGswt0XjILPDE8HQPJpMW1CkqFAf0criha0FuDoE1fgW11Dw7CZ7uzFY0Hml5yc+NhHFLKQVWGAadnavJddO0oVUTTv2KoxvsfFWEsi7ySmAmzcwsTYhGEKbmLaTFWdL/EFLcG2g5satXYYCitpsI76NGqqB+dTcIbTvmNzal2tlcUT9LAp2bJV0+oa2cbMeF+Enx5+O0Uor7P7sIb4huChnVGCic9F3yAI7PAti1dP3sThm9DDRvZ3dbdHUxGQqaqqbNrj1awR9nqgz5nwBKJ4OjHAuAW1gy06/bY+xBOlBzj3Y+6uQxfhLerVp+vSAGfKIh6ywIxF4+AyAnxev6jY0KzUcmUtXQuc464PmUPRQinevpxSwOaA8EUrp/Xo3AZqk649oNBAMfb4lRJ8bbM7fKGpObWnmrc0OBazls5Fx5zYFl2M7TCy/g6Zx3ewKCcHu3On4tcr8Ce7q6eTvuYVgZxNezzbtqdOn7QaasUlh4JDZs53zHzLsMlLN0AsGL6ghw6r2XPg1Ar4u5Aa8DY3MTh9ZRPDNg5N1hT83Crn45ur8Rm0Sj5E8uUHxHptRdAMBXwPdKPfAYJi4YqZEXEBcOkfK5bLaWtrXLyzvS/+bvCJgFs9T99uDf4XR2qeT9o+3nUASbDAz+VYTACf43h1O1ceKsKP08e7jjpzbbOOriZRAwexcBjnMWsYUYyPvU8AFC1TPSoIoHbBMpeIC4GMWghe4ptbxt20ErK4PPx1jr6+FiA3rD6JEhBwwbcC/9VYspeTUzsVv9nbbzyBh+9xUxxibmzFVmYiPDBjuYEfAnbsYgoHiyr4egn4hoy0vnx/J10IzKzmum3EBatFXtzov8WDVGLn0PVm2l68J+TmuwV/+1pAVtU2IGBOD68Aw3hENwjuGFHmxHQaARiY3x+OWjVuiK8AGg1tjeatDIAg8liCADKyynNiwKGjIJDVy9bsekJ61uvs4X29/4kNhORk1qHV/VdhRYVsIIaxGG8hd5brhtCDiwh2+IcbCGBf0AkdVZUpM4ZAcWmAm8+aqWWlXEUlbOIKmGvxyQ+fZM32HEEQE9/Qx/aWs47HrDX5rSn8den1x3tgFQEMDXjB8Tk719F2AXq/al/QSVKLt9+k+UsmULQ8Ss/y4J1hobpI+PrVhyR8+0bK548VSwsSSQD/HojTVVf18sXCfaqHk+us4Rx2mbyiApweAOb1y8x9ey+sCZhG4aIXF3tsDTnk09O6PfxRxL0XYXALCK7QEGdtkUfPDhrRX51/mnT/etrsyYHbD/uAKLjc5uRsy+GUwdBEjoS7giOvItcl6BrFjsFTSUUv04VXWYGSPk17hRYBflHFvVOC7O3rbLi/irI85s2GUSQKb4tbh4ca+/DuBBRfFfz03nOiaoxLXwJ48fSdXaeZwYHH8ZsL8nCPFz4Q8Uf3nXfss4A0GBInKRNCc/2Kg7MmBRK5DTZl4Z0BMzLfflq5KHT2lI1sNtaKvG98S2q4Jj3c1tvPe+frV9mQNSACiIjPfv9luXeofVcPiBJSBQC4lkOMWlb77AItcP+MrgWVkPXyw2Pevb2YqES0igLvD4maNHJFTBQ2/ZOXV4DmQMTnfMxd57dveJ+FxbiiInzLC2UsKqr0CeCLi9izJ60LWnOkEO9ECH2QAq3z/nPzioVhxPtcysG2ickn8VKKYz/vfdtPw5EsaAZ6IuIT4u66u6zeFniirEykSCMF/iAgb95kNG5JpRw8+ZFF/hKJ5gfWbvFwGmsHONjh9pkbEnc6CQavGwkP4J8AQQkheiLDL8edSerZ22LzXi8tfI4OyFku66j3gVE2ccNwb0JNo0Epm/O/HKZ9a16Leb+gHktLcB1SUVH+29dCOGwW0SKYtunqacJ78vVrQVFhsVAuGBN0GmpVV4tQsXQCWNjo6mmxWArwipL3l+hkQjEaWmrq6g2+F7GFbtGSoggW2Dv+3+evkux00gAAxBP0IAj+DNza7vct646dj7pJKIAXmhL03VpPJvveyqbj8iA3uHw7d9p61KC6h5FgB2OQEgLWvZX11wKJJnVGN4kt6OnSBQc9nV5aMLTY5iF4v9JiaD21o+6Dnrc9gFgCIFKquWdheoeegIIg+nXFmkuvPU5a+3kIsXil9uyWfsk8R9a1pYqNNHinFfyJDCkhYHXMhYjnsEuNmjeCm9Pwt8mR4QnXLqdUR0Bd0zK1G/5dzro2q57ql6KUwZveoJ7Eu5Wpb5lwKONPBjM3twLLXPmTeUCczZGioOdNb9Dm4eYRQ5EUWYpaKBlYYONl/pFMJ9SGFqagBz0C+7s27JDJlHlAYh6o+kSWiHv8f3L9dYdy9OWv8ALPL7wuQkkA9+v6iucQ6f+tItOThvN1KV+BJPlVAGi9CA4QjepX8Zl0tlNY0IPV5GUU6WyBhK0SIe5xn0nYLClXJ5rXJNWIqqc3krKg/umh9KBsQlPfulAW9DXrMTTwZVFfMx/WGVd1gx46W9bH/L2Fxj/U8NxDoHklfhZZqU49IMKcHuyTTesFdRJ/1NNKgCA+gmT85HXS9e6LFvR4l/B685fvQYYAFSmwZY5j8FxdoEQOejzkRerbumiG1OhE3FSFTThFFXUytEQ8IHLQU62R9R3VI7yycM8Ip+DJ+ol+pWiG838tK4Me7/RiUwAAAABJRU5ErkJggg==" alt="AddedValue Logo" style="height: 30px; width: auto;">
+    </div>
+    <span class="header-tag">Free Recruiter Tool</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>LinkedIn Search Filter Generator</h1>
+    <p>Describe the role you're hiring for and get ready-to-use Boolean strings and search filters for your LinkedIn platform. Works instantly, no sign up required.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Platform Tabs -->
+  <div class="platform-tabs">
+    <button class="platform-tab active" data-platform="sales-nav" onclick="switchPlatform('sales-nav')">
+      Sales Navigator
+      <small>Full filter set</small>
+    </button>
+    <button class="platform-tab" data-platform="recruiter-lite" onclick="switchPlatform('recruiter-lite')">
+      Recruiter Lite
+      <small>Boolean heavy</small>
+    </button>
+    <button class="platform-tab" data-platform="recruiter-corp" onclick="switchPlatform('recruiter-corp')">
+      Recruiter Corporate
+      <small>All filters + Skills</small>
+    </button>
+  </div>
+
+  <!-- Input Form -->
+  <div class="card">
+    <div class="card-title">Role Details</div>
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Job Title</label>
+        <input type="text" id="jobTitle" placeholder="e.g. Backend Developer, DevOps Engineer">
+      </div>
+
+      <div class="form-group">
+        <label>Seniority</label>
+        <select id="seniority">
+          <option value="">Select...</option>
+          <option value="junior">Junior / Entry Level</option>
+          <option value="mid">Mid Level</option>
+          <option value="senior">Senior</option>
+          <option value="staff">Staff / Principal</option>
+          <option value="lead">Team Lead / Tech Lead</option>
+          <option value="manager">Engineering Manager</option>
+          <option value="director">Director / Head of</option>
+          <option value="vp">VP</option>
+          <option value="cxo">CTO / CXO</option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Tech Stack / Skills</label>
+        <input type="text" id="techStack" placeholder="e.g. Python, AWS, Kubernetes, React (comma separated)">
+        <span class="hint">Separate with commas. Include languages, frameworks, and tools.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="location" placeholder="e.g. Tel Aviv, Israel">
+      </div>
+
+      <div class="form-group">
+        <label>Industry / Domain (select multiple)</label>
+        <div class="chip-group" id="industryChips">
+          <span class="chip" data-value="cyber" onclick="toggleChip(this)">Cybersecurity</span>
+          <span class="chip" data-value="fintech" onclick="toggleChip(this)">Fintech</span>
+          <span class="chip" data-value="healthtech" onclick="toggleChip(this)">Healthtech</span>
+          <span class="chip" data-value="ai" onclick="toggleChip(this)">AI / ML</span>
+          <span class="chip" data-value="saas" onclick="toggleChip(this)">SaaS</span>
+          <span class="chip" data-value="ecommerce" onclick="toggleChip(this)">E-commerce</span>
+          <span class="chip" data-value="gaming" onclick="toggleChip(this)">Gaming</span>
+          <span class="chip" data-value="defense" onclick="toggleChip(this)">Defense / HLS</span>
+          <span class="chip" data-value="adtech" onclick="toggleChip(this)">Adtech / Martech</span>
+          <span class="chip" data-value="edtech" onclick="toggleChip(this)">Edtech</span>
+          <span class="chip" data-value="automotive" onclick="toggleChip(this)">Automotive</span>
+          <span class="chip" data-value="data" onclick="toggleChip(this)">Data / Analytics</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Company Size (select multiple)</label>
+        <div class="chip-group" id="companySizeChips">
+          <span class="chip" data-value="early-startup" onclick="toggleChip(this)">Early Startup (1-50)</span>
+          <span class="chip" data-value="startup" onclick="toggleChip(this)">Startup (1-200)</span>
+          <span class="chip" data-value="scaleup" onclick="toggleChip(this)">Scale-up (51-1,000)</span>
+          <span class="chip" data-value="midsize" onclick="toggleChip(this)">Mid-size (201-5,000)</span>
+          <span class="chip" data-value="enterprise" onclick="toggleChip(this)">Enterprise (5,000+)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Target Companies (optional)</label>
+        <input type="text" id="targetCompanies" placeholder="e.g. Wix, Monday.com, Google">
+        <span class="hint">Specific companies to source from.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Past Companies (optional)</label>
+        <input type="text" id="pastCompanies" placeholder="e.g. 8200, Check Point, Google">
+        <span class="hint">Past employers as quality signal.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Years of Experience</label>
+        <select id="experience">
+          <option value="">Infer from seniority</option>
+          <option value="0-2">0 to 2 years</option>
+          <option value="3-5">3 to 5 years</option>
+          <option value="5-10">5 to 10 years</option>
+          <option value="10+">10+ years</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="generate-btn" onclick="generateFilters()">Generate Search Filters</button>
+
+  <!-- Results -->
+  <div class="results" id="results">
+    <div class="card">
+      <span class="platform-badge" id="platformBadge">Sales Navigator</span>
+      <div id="resultContent"></div>
+    </div>
+
+    <button class="copy-all-btn" onclick="copyAll()">Copy All Filters to Clipboard</button>
+
+    <div class="tips-box" id="tipsBox">
+      <h4>Sourcing Tips</h4>
+      <ul id="tipsList"></ul>
+    </div>
+  </div>
+
+  <!-- CTA for AddedValue -->
+  <div class="cta-section">
+    <h3>Need hard-to-find talent? We do it for you.</h3>
+    <p>AddedValue specializes in local &amp; global tech talent recruiting for startups and scale-ups. We find candidates that your internal team can't or doesn't have time to reach.</p>
+    <a href="https://www.added-value.co.il" target="_blank" class="cta-btn">
+      Talk to Our Team
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+    <div class="cta-stats">
+      <div class="cta-stat">
+        <div class="cta-stat-num">100+</div>
+        <div class="cta-stat-label">Clients</div>
+      </div>
+      <div class="cta-stat">
+        <div class="cta-stat-num">30+</div>
+        <div class="cta-stat-label">Cities Worldwide</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Built by <a href="https://www.added-value.co.il" target="_blank">AddedValue</a> for tech recruiters who value their time.
+</div>
+
+<script>
+let currentPlatform = 'sales-nav';
+
+function switchPlatform(platform) {
+  currentPlatform = platform;
+  document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-platform="${platform}"]`).classList.add('active');
+  document.getElementById('results').classList.remove('visible');
+}
+
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+function getSelectedChips(containerId) {
+  const chips = document.querySelectorAll(`#${containerId} .chip.selected`);
+  return Array.from(chips).map(c => c.dataset.value);
+}
+
+// Title variations database
+const TITLE_MAP = {
+  'backend developer': ['Backend Developer','Back-End Developer','Backend Engineer','Back-End Engineer','Server Side Developer','Server Side Engineer','Software Engineer','Software Developer'],
+  'frontend developer': ['Frontend Developer','Front-End Developer','Frontend Engineer','Front-End Engineer','UI Developer','UI Engineer','Web Developer'],
+  'full stack developer': ['Full Stack Developer','Fullstack Developer','Full-Stack Developer','Full Stack Engineer','Fullstack Engineer','Software Engineer','Web Developer'],
+  'fullstack developer': ['Full Stack Developer','Fullstack Developer','Full-Stack Developer','Full Stack Engineer','Fullstack Engineer','Software Engineer','Web Developer'],
+  'devops engineer': ['DevOps Engineer','DevOps Specialist','Site Reliability Engineer','SRE','Infrastructure Engineer','Platform Engineer','Cloud Engineer','Cloud Infrastructure Engineer'],
+  'data scientist': ['Data Scientist','ML Engineer','Machine Learning Engineer','Applied Scientist','AI Engineer','Research Scientist','Data Analyst'],
+  'data engineer': ['Data Engineer','Data Infrastructure Engineer','Analytics Engineer','ETL Developer','Big Data Engineer','Data Platform Engineer'],
+  'ml engineer': ['ML Engineer','Machine Learning Engineer','AI Engineer','Applied Scientist','Deep Learning Engineer','NLP Engineer','Data Scientist'],
+  'product manager': ['Product Manager','Product Owner','Senior Product Manager','Group Product Manager'],
+  'product designer': ['Product Designer','UX Designer','UI/UX Designer','UX/UI Designer','Experience Designer','Interaction Designer'],
+  'qa engineer': ['QA Engineer','QA Automation Engineer','Test Automation Engineer','Quality Assurance Engineer','SDET','Software Test Engineer','Automation Engineer'],
+  'mobile developer': ['Mobile Developer','Mobile Engineer','iOS Developer','Android Developer','React Native Developer','Flutter Developer'],
+  'security engineer': ['Security Engineer','Application Security Engineer','AppSec Engineer','Cybersecurity Engineer','Information Security Engineer','Security Analyst','Penetration Tester'],
+  'engineering manager': ['Engineering Manager','Development Manager','Software Engineering Manager','Engineering Team Lead','R&D Manager','R&D Team Lead'],
+  'director of engineering': ['Director of Engineering','Engineering Director','Director of R&D','R&D Director','Senior Engineering Manager','Head of Engineering','VP Engineering'],
+  'vp r&d': ['VP R&D','VP of R&D','Vice President R&D','VP Engineering','VP of Engineering','Vice President Engineering','SVP R&D','SVP Engineering','Head of R&D','Head of Engineering'],
+  'cto': ['CTO','Chief Technology Officer','Co-Founder & CTO','VP R&D','VP Engineering'],
+  'solutions engineer': ['Solutions Engineer','Pre-Sales Engineer','Sales Engineer','Solutions Architect','Technical Account Manager'],
+  'technical writer': ['Technical Writer','Documentation Engineer','Content Developer','Technical Content Writer'],
+  'scrum master': ['Scrum Master','Agile Coach','Agile Project Manager','Delivery Manager'],
+  'system administrator': ['System Administrator','Sysadmin','IT Administrator','Systems Engineer','Infrastructure Administrator'],
+  'cloud engineer': ['Cloud Engineer','Cloud Architect','AWS Engineer','Azure Engineer','GCP Engineer','Cloud Infrastructure Engineer','Cloud Solutions Architect'],
+  'data analyst': ['Data Analyst','Business Analyst','BI Analyst','Business Intelligence Analyst','Analytics Analyst','Reporting Analyst'],
+  'head of data': ['Head of Data','VP Data','Director of Data','Chief Data Officer','Data Director','VP of Data Science','Director of Analytics'],
+  'team lead': ['Team Lead','Tech Lead','Technical Lead','Software Team Lead','Development Team Lead','Engineering Lead'],
+  'architect': ['Software Architect','Solutions Architect','System Architect','Enterprise Architect','Technical Architect','Principal Engineer'],
+};
+
+const SENIORITY_PREFIXES = {
+  'junior': { prefixes: ['Junior','Associate'], excludes: ['Senior','Staff','Principal','Lead','Manager','Director','VP','Head of','Chief'] },
+  'mid': { prefixes: [''], excludes: ['Junior','Intern','Student','Trainee','Director','VP','Head of','Chief'] },
+  'senior': { prefixes: ['Senior'], excludes: ['Junior','Intern','Student','Trainee','Associate'] },
+  'staff': { prefixes: ['Staff','Principal','Distinguished','Senior Staff'], excludes: ['Junior','Intern','Student','Trainee','Associate'] },
+  'lead': { prefixes: ['Lead','Tech Lead','Team Lead'], excludes: ['Junior','Intern','Student','Trainee','Associate'] },
+  'manager': { prefixes: [''], excludes: ['Junior','Intern','Student','Trainee','Associate'] },
+  'director': { prefixes: ['Director of','Head of','Senior Director of'], excludes: ['Associate','Assistant','Deputy','Junior'] },
+  'vp': { prefixes: ['VP','VP of','Vice President','SVP'], excludes: ['Associate VP','Assistant VP','Deputy'] },
+  'cxo': { prefixes: ['Chief','C-Level'], excludes: ['Associate','Assistant','Deputy','Junior'] },
+};
+
+const SENIORITY_TO_FILTER = {
+  'junior': 'Entry', 'mid': 'Senior', 'senior': 'Senior', 'staff': 'Senior',
+  'lead': 'Manager', 'manager': 'Manager', 'director': 'Director', 'vp': 'VP', 'cxo': 'CXO',
+};
+
+const FUNCTION_MAP = {
+  'backend developer': 'Engineering', 'frontend developer': 'Engineering',
+  'full stack developer': 'Engineering', 'fullstack developer': 'Engineering',
+  'devops engineer': 'Engineering, Information Technology',
+  'data scientist': 'Engineering, Research', 'data engineer': 'Engineering',
+  'ml engineer': 'Engineering, Research', 'product manager': 'Product Management',
+  'product designer': 'Arts and Design', 'qa engineer': 'Quality Assurance, Engineering',
+  'mobile developer': 'Engineering', 'security engineer': 'Engineering, Information Technology',
+  'engineering manager': 'Engineering', 'director of engineering': 'Engineering',
+  'vp r&d': 'Engineering', 'cto': 'Engineering',
+  'solutions engineer': 'Sales, Engineering', 'technical writer': 'Media and Communication',
+  'scrum master': 'Program and Project Management',
+  'system administrator': 'Information Technology',
+  'cloud engineer': 'Engineering, Information Technology',
+  'data analyst': 'Information Technology, Research',
+  'head of data': 'Engineering, Research', 'team lead': 'Engineering', 'architect': 'Engineering',
+};
+
+const INDUSTRY_MAP = {
+  'cyber': ['Computer & Network Security','Information Technology and Services','Defense & Space'],
+  'fintech': ['Financial Services','Banking','Computer Software'],
+  'healthtech': ['Hospital & Health Care','Medical Devices','Biotechnology','Pharmaceuticals'],
+  'ai': ['Computer Software','Information Technology and Services','Internet'],
+  'saas': ['Computer Software','Information Technology and Services','Internet'],
+  'ecommerce': ['Internet','Retail','Consumer Electronics'],
+  'gaming': ['Computer Games','Entertainment','Media Production'],
+  'defense': ['Defense & Space','Military','Computer & Network Security'],
+  'adtech': ['Marketing and Advertising','Internet','Online Media'],
+  'edtech': ['Education Management','E-Learning','Computer Software'],
+  'automotive': ['Automotive','Transportation'],
+  'data': ['Information Technology and Services','Computer Software','Internet'],
+};
+
+const COMPANY_SIZE_MAP = {
+  'early-startup': ['1-10','11-50'],
+  'startup': ['1-10','11-50','51-200'],
+  'scaleup': ['51-200','201-500','501-1,000'],
+  'midsize': ['201-500','501-1,000','1,001-5,000'],
+  'enterprise': ['5,001-10,000','10,001+'],
+};
+
+const EXPERIENCE_MAP = {
+  '0-2': ['Less than 1 year','1 to 2 years'],
+  '3-5': ['3 to 5 years'],
+  '5-10': ['6 to 10 years'],
+  '10+': ['More than 10 years'],
+};
+
+const EXPERIENCE_FROM_SENIORITY = {
+  'junior': ['Less than 1 year','1 to 2 years','3 to 5 years'],
+  'mid': ['3 to 5 years','6 to 10 years'],
+  'senior': ['6 to 10 years','More than 10 years'],
+  'staff': ['6 to 10 years','More than 10 years'],
+  'lead': ['6 to 10 years','More than 10 years'],
+  'manager': ['6 to 10 years','More than 10 years'],
+  'director': ['More than 10 years'],
+  'vp': ['More than 10 years'],
+  'cxo': ['More than 10 years'],
+};
+
+const TECH_SYNONYMS = {
+  'react': ['React','React.js','ReactJS'],
+  'node': ['Node.js','NodeJS','Node JS'],
+  'node.js': ['Node.js','NodeJS','Node JS'],
+  'aws': ['AWS','Amazon Web Services'],
+  'gcp': ['GCP','Google Cloud Platform','Google Cloud'],
+  'azure': ['Microsoft Azure','Azure'],
+  'python': ['Python','Python3'],
+  'k8s': ['Kubernetes','K8s'],
+  'kubernetes': ['Kubernetes','K8s'],
+  'typescript': ['TypeScript','TS'],
+  'javascript': ['JavaScript','JS','ES6'],
+  'docker': ['Docker','containerization'],
+  'terraform': ['Terraform','Infrastructure as Code','IaC'],
+  'postgres': ['PostgreSQL','Postgres'],
+  'postgresql': ['PostgreSQL','Postgres'],
+  'mongo': ['MongoDB','Mongo'],
+  'mongodb': ['MongoDB','Mongo'],
+  'redis': ['Redis'], 'elasticsearch': ['Elasticsearch','Elastic'],
+  'kafka': ['Apache Kafka','Kafka'], 'spark': ['Apache Spark','Spark'],
+  'pytorch': ['PyTorch'], 'tensorflow': ['TensorFlow','TF'],
+  'nlp': ['NLP','Natural Language Processing'],
+  'ml': ['Machine Learning','ML'],
+  'ci/cd': ['CI/CD','continuous integration','continuous deployment'],
+  'graphql': ['GraphQL'],
+  'rest': ['REST APIs','RESTful'],
+  'microservices': ['Microservices','micro-services'],
+  'vue': ['Vue.js','Vue','VueJS'],
+  'angular': ['Angular','AngularJS'],
+  'django': ['Django'], 'flask': ['Flask'],
+  'spring': ['Spring Boot','Spring Framework'],
+  '.net': ['.NET','ASP.NET','C#'],
+  'go': ['Go','Golang'], 'rust': ['Rust'],
+  'swift': ['Swift','iOS'], 'kotlin': ['Kotlin','Android'],
+  'flutter': ['Flutter','Dart'], 'react native': ['React Native'],
+  'jenkins': ['Jenkins'], 'github actions': ['GitHub Actions'],
+  'argocd': ['ArgoCD','Argo CD'], 'ansible': ['Ansible'],
+  'selenium': ['Selenium','Selenium WebDriver'],
+  'cypress': ['Cypress'], 'playwright': ['Playwright'],
+};
+
+const DOMAIN_KEYWORDS = {
+  'cyber': ['cybersecurity','cyber security','infosec','information security','network security','endpoint security'],
+  'fintech': ['fintech','financial technology','financial services','payments','banking','regulatory','compliance'],
+  'healthtech': ['healthtech','digital health','medical','healthcare','clinical','FDA','HIPAA'],
+  'ai': ['artificial intelligence','AI','machine learning','deep learning','neural networks','LLM','generative AI'],
+  'saas': ['SaaS','software as a service','B2B','cloud platform','subscription'],
+  'ecommerce': ['e-commerce','ecommerce','marketplace','retail','online store','DTC','D2C'],
+  'gaming': ['gaming','game development','game engine','Unity','Unreal','multiplayer'],
+  'defense': ['defense','homeland security','HLS','intelligence','military tech','defense tech'],
+  'adtech': ['adtech','advertising technology','martech','marketing technology','programmatic','DSP','SSP'],
+  'edtech': ['edtech','education technology','e-learning','LMS','online learning'],
+  'automotive': ['automotive','autonomous','ADAS','connected car','mobility','V2X'],
+  'data': ['data platform','data pipeline','analytics','business intelligence','data warehouse','big data'],
+};
+
+function getVal(id) { return document.getElementById(id).value.trim(); }
+
+function buildBooleanTitle(title, seniority) {
+  const key = title.toLowerCase();
+  let baseTitles = TITLE_MAP[key] || [title];
+  const seniorityInfo = seniority ? SENIORITY_PREFIXES[seniority] : null;
+  let allTitles = [];
+
+  if (seniorityInfo) {
+    seniorityInfo.prefixes.forEach(prefix => {
+      baseTitles.forEach(t => {
+        if (prefix === '') { allTitles.push(t); }
+        else if (!t.toLowerCase().startsWith(prefix.toLowerCase())) { allTitles.push(`${prefix} ${t}`); }
+        else { allTitles.push(t); }
+      });
+    });
+    if (['manager','director','vp','cxo'].includes(seniority)) { allTitles = baseTitles; }
+  } else {
+    allTitles = baseTitles;
+  }
+
+  allTitles = [...new Set(allTitles)];
+  const quoted = allTitles.map(t => t.includes(' ') ? `"${t}"` : t);
+  let boolean = '(' + quoted.join(' OR ') + ')';
+
+  if (seniorityInfo && seniorityInfo.excludes.length > 0) {
+    const exQuoted = seniorityInfo.excludes.map(e => `"${e}"`);
+    boolean += ' NOT (' + exQuoted.join(' OR ') + ')';
+  }
+  return boolean;
+}
+
+function buildBooleanKeywords(techStack, industries, companySizes) {
+  const parts = [];
+
+  if (techStack) {
+    const techs = techStack.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+    if (techs.length > 0) {
+      const groups = techs.slice(0, 3).map(tech => {
+        const syns = TECH_SYNONYMS[tech] || [tech.charAt(0).toUpperCase() + tech.slice(1)];
+        const quoted = syns.map(s => s.includes(' ') ? `"${s}"` : s);
+        return '(' + quoted.join(' OR ') + ')';
+      });
+      parts.push(groups.join(' AND '));
+    }
+  }
+
+  if (industries.length > 0) {
+    let allDomainKw = [];
+    industries.forEach(ind => {
+      if (DOMAIN_KEYWORDS[ind]) allDomainKw.push(...DOMAIN_KEYWORDS[ind].slice(0, 3));
+    });
+    allDomainKw = [...new Set(allDomainKw)].slice(0, 6);
+    if (allDomainKw.length > 0) {
+      const quoted = allDomainKw.map(k => k.includes(' ') ? `"${k}"` : k);
+      parts.push((parts.length > 0 ? 'AND ' : '') + '(' + quoted.join(' OR ') + ')');
+    }
+  }
+
+  return parts.join(' ') || 'No Relevant Filters';
+}
+
+function generateFilters() {
+  const title = getVal('jobTitle');
+  if (!title) { alert('Please enter a job title.'); return; }
+
+  const seniority = getVal('seniority');
+  const techStack = getVal('techStack');
+  const location = getVal('location');
+  const industries = getSelectedChips('industryChips');
+  const companySizes = getSelectedChips('companySizeChips');
+  const targetCompanies = getVal('targetCompanies');
+  const pastCompanies = getVal('pastCompanies');
+  const experience = getVal('experience');
+
+  const booleanTitle = buildBooleanTitle(title, seniority);
+  const booleanKeywords = buildBooleanKeywords(techStack, industries, companySizes);
+  const titleKey = title.toLowerCase();
+  const baseTitles = TITLE_MAP[titleKey] || [title];
+  const functionVal = FUNCTION_MAP[titleKey] || 'Engineering';
+
+  let industryList = 'No Relevant Filters';
+  if (industries.length > 0) {
+    let allIndustries = [];
+    industries.forEach(ind => { if (INDUSTRY_MAP[ind]) allIndustries.push(...INDUSTRY_MAP[ind]); });
+    industryList = [...new Set(allIndustries)].join(', ');
+  }
+
+  let companySizeList = 'No Relevant Filters';
+  if (companySizes.length > 0) {
+    let allSizes = [];
+    companySizes.forEach(sz => { if (COMPANY_SIZE_MAP[sz]) allSizes.push(...COMPANY_SIZE_MAP[sz]); });
+    companySizeList = [...new Set(allSizes)].join(', ');
+  }
+
+  const seniorityFilter = seniority ? SENIORITY_TO_FILTER[seniority] : 'No Relevant Filters';
+
+  let expList;
+  if (experience) { expList = (EXPERIENCE_MAP[experience] || []).join(', '); }
+  else if (seniority) { expList = (EXPERIENCE_FROM_SENIORITY[seniority] || []).join(', '); }
+  else { expList = 'No Relevant Filters'; }
+
+  const skills = techStack ? techStack.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).map(s => {
+    const syns = TECH_SYNONYMS[s]; return syns ? syns[0] : s.charAt(0).toUpperCase() + s.slice(1);
+  }).join(', ') : 'No Relevant Filters';
+
+  let sections = [];
+  sections.push({ label: 'Boolean Title Search', value: booleanTitle, highlight: true });
+  sections.push({ label: 'Boolean Keywords Search', value: booleanKeywords, highlight: true });
+  sections.push({ label: 'Job Title (Current)', value: baseTitles.slice(0, 5).join(', ') });
+  sections.push({ label: 'Company (Current)', value: targetCompanies || 'No Relevant Filters' });
+  sections.push({ label: 'Company (Past)', value: pastCompanies || 'No Relevant Filters' });
+  sections.push({ label: 'Location', value: location || 'No Relevant Filters' });
+  sections.push({ label: 'Industry', value: industryList });
+
+  if (currentPlatform === 'sales-nav' || currentPlatform === 'recruiter-corp') {
+    sections.push({ label: 'Seniority Level', value: seniorityFilter });
+    sections.push({ label: 'Function', value: functionVal });
+    sections.push({ label: 'Company Size', value: companySizeList });
+    sections.push({ label: 'Years of Experience', value: expList });
+  }
+
+  if (currentPlatform === 'recruiter-corp') {
+    sections.push({ label: 'Skills', value: skills });
+    sections.push({ label: 'Degree', value: 'No Relevant Filters' });
+    sections.push({ label: 'Field of Study', value: 'No Relevant Filters' });
+  }
+
+  const container = document.getElementById('resultContent');
+  container.innerHTML = '';
+
+  const badge = document.getElementById('platformBadge');
+  if (currentPlatform === 'sales-nav') { badge.textContent = 'Sales Navigator'; badge.className = 'platform-badge badge-sales'; }
+  else if (currentPlatform === 'recruiter-lite') { badge.textContent = 'Recruiter Lite'; badge.className = 'platform-badge badge-lite'; }
+  else { badge.textContent = 'Recruiter Corporate'; badge.className = 'platform-badge badge-corporate'; }
+
+  sections.forEach((s, i) => {
+    const isNoFilter = s.value === 'No Relevant Filters';
+    const div = document.createElement('div');
+    div.className = 'result-section';
+    div.innerHTML = `
+      <div class="result-header">
+        <span class="result-label">${s.label}</span>
+        <button class="copy-btn" onclick="copyField(this, ${i})">Copy</button>
+      </div>
+      <div class="result-value ${s.highlight ? 'highlight' : ''}">${isNoFilter ? '<span class="no-filter">No Relevant Filters</span>' : escapeHtml(s.value)}</div>
+    `;
+    container.appendChild(div);
+  });
+
+  generateTips(title, seniority, location, companySizes, pastCompanies);
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window._allSections = sections;
+}
+
+function generateTips(title, seniority, location, companySizes, pastCompanies) {
+  const tips = [];
+  if (currentPlatform === 'recruiter-corp') {
+    tips.push('Enable the "Open to Work" Spotlight first for high intent candidates, then run again without it for the full pool.');
+  }
+  if (location && location.toLowerCase().includes('tel aviv')) {
+    tips.push('Set search radius to 40km to include Herzliya, Ramat Gan, Petah Tikva, Ra\'anana, and Rishon Lezion.');
+  } else if (location && location.toLowerCase().includes('haifa')) {
+    tips.push('Set search radius to 40km to include Yokneam, Karmiel, Nahariya, and the Northern tech hub.');
+  } else if (location) {
+    tips.push('Adjust search radius based on commute range typical for your area.');
+  }
+  if (pastCompanies && pastCompanies.toLowerCase().includes('8200')) {
+    tips.push('Many 8200 alumni list service under "IDF" or "Israeli Defense Forces". Run a second search with "8200" only in Keywords, not Company Past.');
+  }
+  if (currentPlatform === 'recruiter-lite') {
+    tips.push('Recruiter Lite has no Seniority or Company Size filters. The Boolean strings compensate for that. Copy them exactly as generated.');
+    tips.push('Results capped at 1,000. If too broad, add more AND conditions to Boolean Keywords.');
+  }
+  if (companySizes.some(s => s.includes('startup'))) {
+    tips.push('Startup candidates often have shorter tenures. Don\'t filter by Years at Current Company.');
+  }
+  if (seniority === 'senior' || seniority === 'staff') {
+    tips.push('Senior / Staff candidates are rarely actively looking. Lead InMail with the technical challenge, not the company name.');
+  }
+  if (seniority === 'director' || seniority === 'vp' || seniority === 'cxo') {
+    tips.push('For leadership roles, LinkedIn Recruiter\'s "Find Similar" feature works well. Identify 2 to 3 strong profiles first, then use it.');
+  }
+  tips.push('If results are too few, remove the Industry filter first. Then broaden Company Size.');
+  document.getElementById('tipsList').innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function copyField(btn, index) {
+  const text = window._allSections[index].value;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function copyAll() {
+  if (!window._allSections) return;
+  const text = window._allSections.map(s => `${s.label}: ${s.value}`).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-all-btn');
+    btn.textContent = 'Copied to Clipboard!';
+    setTimeout(() => { btn.textContent = 'Copy All Filters to Clipboard'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
